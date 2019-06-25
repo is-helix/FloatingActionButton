@@ -1013,4 +1013,16 @@ public class FloatingActionMenu extends ViewGroup {
     public void setOnMenuButtonLongClickListener(OnLongClickListener longClickListener) {
         mMenuButton.setOnLongClickListener(longClickListener);
     }
+
+    public void setMenuLabelColorNormal(int color) {
+        mLabelsColorNormal = color;
+    }
+
+    public void setMenuLabelTextColor(int color) {
+        mLabelsTextColor = ColorStateList.valueOf(color);
+    }
+
+    public void setMenuLabelColorPressed(int color) {
+        mLabelsColorPressed = color;
+    }
 }
