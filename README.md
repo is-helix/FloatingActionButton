@@ -1,4 +1,3 @@
-# WARNING! FURTHER DEVELOPMENT AND SUPPORT IS DISCONTINUED.
 # FloatingActionButton
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.clans/fab/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.clans/fab) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Clans%2FFloatingActionButton-blue.svg?style=flat)](http://android-arsenal.com/details/1/1684)
 
