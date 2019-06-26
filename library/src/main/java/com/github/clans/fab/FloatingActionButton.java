@@ -356,11 +356,14 @@ public class FloatingActionButton extends ImageButton {
             });
         }
 
-        int iconSize = -1;
+        int iconWidth = -1;
+        int iconHeight = -1;
         if (getIconDrawable() != null) {
-            iconSize = Math.max(getIconDrawable().getIntrinsicWidth(), getIconDrawable().getIntrinsicHeight());
+            iconWidth = getIconDrawable().getIntrinsicWidth();
+            iconHeight = getIconDrawable().getIntrinsicHeight();
         }
-        int iconOffset = (getCircleSize() - (iconSize > 0 ? iconSize : mIconSize)) / 2;
+        int iconWidthOffset = (getCircleSize() - (iconWidth > 0 ? iconWidth : mIconSize)) / 2;
+        int iconHeightOffset = (getCircleSize() - (iconHeight > 0 ? iconHeight : mIconSize)) / 2;
         int circleInsetHorizontal = hasShadow() ? mShadowRadius + Math.abs(mShadowXOffset) : 0;
         int circleInsetVertical = hasShadow() ? mShadowRadius + Math.abs(mShadowYOffset) : 0;
 
@@ -369,19 +372,12 @@ public class FloatingActionButton extends ImageButton {
             circleInsetVertical += mProgressWidth;
         }
 
-        /*layerDrawable.setLayerInset(
-                mShowShadow ? 1 : 0,
-                circleInsetHorizontal,
-                circleInsetVertical,
-                circleInsetHorizontal,
-                circleInsetVertical
-        );*/
         layerDrawable.setLayerInset(
                 hasShadow() ? 2 : 1,
-                circleInsetHorizontal + iconOffset,
-                circleInsetVertical + iconOffset,
-                circleInsetHorizontal + iconOffset,
-                circleInsetVertical + iconOffset
+                circleInsetHorizontal + iconWidthOffset,
+                circleInsetVertical + iconHeightOffset,
+                circleInsetHorizontal + iconWidthOffset,
+                circleInsetVertical + iconHeightOffset
         );
 
         setBackgroundCompat(layerDrawable);

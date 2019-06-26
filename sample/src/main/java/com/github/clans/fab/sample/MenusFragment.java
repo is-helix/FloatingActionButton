@@ -72,7 +72,7 @@ public class MenusFragment extends Fragment {
         final FloatingActionButton programFab1 = new FloatingActionButton(getActivity());
         programFab1.setButtonSize(FloatingActionButton.SIZE_MINI);
         programFab1.setLabelText(getString(R.string.lorem_ipsum));
-        programFab1.setImageResource(R.drawable.ic_edit);
+        programFab1.setImageResource(R.drawable.ic_add_photo);
         menuRed.addMenuButton(programFab1);
         programFab1.setOnClickListener(new View.OnClickListener() {
             @Override
