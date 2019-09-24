@@ -34,7 +34,7 @@ Sample APK can be found in **[Releases](https://github.com/Clans/FloatingActionB
 Add a dependency to your `build.gradle`:
 ```
 dependencies {
-    compile 'com.github.clans:fab:1.6.4'
+    implementation 'com.github.clans:fab:1.6.4'
 }
 ```
 Add the `com.github.clans.fab.FloatingActionButton` to your layout XML file.
@@ -165,10 +165,10 @@ Labels shadow preferences depends on their corresponding **FloatingActionButtons
 For more usage examples check the **sample** project.
 
 # Changelog
-Please see the [Changelog](https://github.com/Clans/FloatingActionButton/wiki/Changelog) page to see what's recently changed.
+Please see the [Changelog](https://github.com/sougata-chatterjee/FloatingActionButton/wiki/Change-Log) page to see what's recently changed.
 
 # Credits
-I used [android-floating-action-button](https://github.com/futuresimple/android-floating-action-button) library by Jerzy Chalupski as a base for development.
+I used [Clans FAB Library](https://github.com/Clans/FloatingActionButton) and am currently maintaining it.
 
 # License
 ```
