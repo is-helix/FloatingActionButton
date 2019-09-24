@@ -1,13 +1,13 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 28
-        versionCode Integer.parseInt(project.VERSION_CODE)
-        versionName project.VERSION_NAME
+        targetSdkVersion 29
+        versionCode Integer.parseInt(VERSION_CODE)
+        versionName VERSION_NAME
     }
     buildTypes {
         release {
