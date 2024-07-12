@@ -2,6 +2,8 @@ package com.github.clans.fab.sample;
 
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,13 +18,14 @@ import com.github.fab.sample.R;
 
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Objects;
 
 public class ProgressFragment extends Fragment {
 
-    private int mScrollOffset = 4;
-    private int mMaxProgress = 100;
+    private final int mScrollOffset = 4;
+    private final int mMaxProgress = 100;
     private LinkedList<ProgressType> mProgressTypes;
-    private Handler mUiHandler = new Handler();
+    private final Handler mUiHandler = new Handler();
 
     @Nullable
     @Override
@@ -31,7 +34,7 @@ public class ProgressFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         Locale[] availableLocales = Locale.getAvailableLocales();
@@ -40,51 +43,48 @@ public class ProgressFragment extends Fragment {
             mProgressTypes.offer(type);
         }
 
-        final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        final FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setMax(mMaxProgress);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
+        RecyclerView recyclerView = view.findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(new LanguageAdapter(availableLocales));
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ProgressType type = mProgressTypes.poll();
-                switch (type) {
-                    case INDETERMINATE:
-                        fab.setShowProgressBackground(true);
-                        fab.setIndeterminate(true);
-                        mProgressTypes.offer(ProgressType.INDETERMINATE);
-                        break;
-                    case PROGRESS_POSITIVE:
-                        fab.setIndeterminate(false);
-                        fab.setProgress(70, true);
-                        mProgressTypes.offer(ProgressType.PROGRESS_POSITIVE);
-                        break;
-                    case PROGRESS_NEGATIVE:
-                        fab.setProgress(30, true);
-                        mProgressTypes.offer(ProgressType.PROGRESS_NEGATIVE);
-                        break;
-                    case HIDDEN:
-                        fab.hideProgress();
-                        mProgressTypes.offer(ProgressType.HIDDEN);
-                        break;
-                    case PROGRESS_NO_ANIMATION:
-                        increaseProgress(fab, 0);
-                        break;
-                    case PROGRESS_NO_BACKGROUND:
-                        fab.setShowProgressBackground(false);
-                        fab.setIndeterminate(true);
-                        mProgressTypes.offer(ProgressType.PROGRESS_NO_BACKGROUND);
-                        break;
-                }
+        fab.setOnClickListener(v -> {
+            ProgressType type = mProgressTypes.poll();
+            switch (Objects.requireNonNull(type)) {
+                case INDETERMINATE:
+                    fab.setShowProgressBackground(true);
+                    fab.setIndeterminate(true);
+                    mProgressTypes.offer(ProgressType.INDETERMINATE);
+                    break;
+                case PROGRESS_POSITIVE:
+                    fab.setIndeterminate(false);
+                    fab.setProgress(70, true);
+                    mProgressTypes.offer(ProgressType.PROGRESS_POSITIVE);
+                    break;
+                case PROGRESS_NEGATIVE:
+                    fab.setProgress(30, true);
+                    mProgressTypes.offer(ProgressType.PROGRESS_NEGATIVE);
+                    break;
+                case HIDDEN:
+                    fab.hideProgress();
+                    mProgressTypes.offer(ProgressType.HIDDEN);
+                    break;
+                case PROGRESS_NO_ANIMATION:
+                    increaseProgress(fab, 0);
+                    break;
+                case PROGRESS_NO_BACKGROUND:
+                    fab.setShowProgressBackground(false);
+                    fab.setIndeterminate(true);
+                    mProgressTypes.offer(ProgressType.PROGRESS_NO_BACKGROUND);
+                    break;
             }
         });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (Math.abs(dy) > mScrollOffset) {
                     if (dy > 0) {
@@ -118,14 +118,15 @@ public class ProgressFragment extends Fragment {
         }
     }
 
-    private class LanguageAdapter extends RecyclerView.Adapter<ViewHolder> {
+    private static class LanguageAdapter extends RecyclerView.Adapter<ViewHolder> {
 
-        private Locale[] mLocales;
+        private final Locale[] mLocales;
 
         private LanguageAdapter(Locale[] mLocales) {
             this.mLocales = mLocales;
         }
 
+        @NonNull
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             TextView tv = (TextView) LayoutInflater.from(parent.getContext())

@@ -2,6 +2,8 @@ package com.github.clans.fab.sample;
 
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
@@ -21,7 +23,6 @@ import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
-    private ListView mListView;
     private FloatingActionButton mFab;
     private int mPreviousVisibleItem;
 
@@ -32,15 +33,10 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mListView = (ListView) view.findViewById(R.id.list);
-        mFab = (FloatingActionButton) view.findViewById(R.id.fab);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        ListView mListView = view.findViewById(R.id.list);
+        mFab = view.findViewById(R.id.fab);
 
         Locale[] availableLocales = Locale.getAvailableLocales();
         List<String> locales = new ArrayList<>();
@@ -48,7 +44,7 @@ public class HomeFragment extends Fragment {
             locales.add(locale.getDisplayName());
         }
 
-        mListView.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1,
+        mListView.setAdapter(new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1,
                 android.R.id.text1, locales));
 
         mFab.hide(false);

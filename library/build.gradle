@@ -1,31 +1,27 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 29
+    compileSdk 33
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 29
-        versionCode Integer.parseInt(VERSION_CODE)
-        versionName VERSION_NAME
+        minSdkVersion 21
+        targetSdkVersion 33
     }
     buildTypes {
         release {
             minifyEnabled false
-            debuggable false
         }
 
         debug {
             minifyEnabled false
-            debuggable true
         }
     }
+    namespace 'com.github.clans.fab'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'org.jetbrains:annotations:15.0'
 }
-
-apply plugin: 'com.github.dcendents.android-maven'
 
 group='com.github.sougata-chatterjee'
