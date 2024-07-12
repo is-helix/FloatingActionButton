@@ -1,4 +1,7 @@
-apply plugin: 'com.android.library'
+plugins {
+    id("com.android.library")
+    id("maven-publish")
+}
 
 android {
     compileSdk 33
@@ -16,12 +19,27 @@ android {
             minifyEnabled false
         }
     }
+
     namespace 'com.github.clans.fab'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'org.jetbrains:annotations:15.0'
+    implementation 'org.jetbrains:annotations:23.0.0'
 }
 
-group='com.github.sougata-chatterjee'
+group=GROUP
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                from components.findByName("release")
+                groupId = 'com.github.jitpack'
+                artifactId = 'android-example'
+                version = '1.0'
+            }
+        }
+    }
+}
