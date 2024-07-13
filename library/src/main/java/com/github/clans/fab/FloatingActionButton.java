@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Outline;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
@@ -58,7 +59,7 @@ public class FloatingActionButton extends ImageButton {
     private int mColorDisabled;
     private int mColorRipple;
     private Drawable mIcon;
-    private int mIconSize = Util.dpToPx(getContext(), 24f);
+    private final int mIconSize = Util.dpToPx(getContext(), 24f);
     private Animation mShowAnimation;
     private Animation mHideAnimation;
     private String mLabelText;
@@ -77,15 +78,15 @@ public class FloatingActionButton extends ImageButton {
     private float mOriginalY = -1;
     private boolean mButtonPositionSaved;
     private RectF mProgressCircleBounds = new RectF();
-    private Paint mBackgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private Paint mProgressPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint mBackgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint mProgressPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private boolean mProgressIndeterminate;
     private long mLastTimeAnimated;
     private float mSpinSpeed = 195.0f; //The amount of degrees per second
     private long mPausedTimeWithoutGrowing = 0;
     private double mTimeStartGrowing;
     private boolean mBarGrowingFromFront = true;
-    private int mBarLength = 16;
+    private final int mBarLength = 16;
     private float mBarExtraLength;
     private float mCurrentProgress;
     private float mTargetProgress;
@@ -109,7 +110,6 @@ public class FloatingActionButton extends ImageButton {
         init(context, attrs, defStyleAttr);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public FloatingActionButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context, attrs, defStyleAttr);
@@ -329,7 +329,6 @@ public class FloatingActionButton extends ImageButton {
         updateBackground();
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void setLayoutParams(ViewGroup.LayoutParams params) {
         if (params instanceof ViewGroup.MarginLayoutParams && mUsingElevationCompat) {
@@ -380,6 +379,7 @@ public class FloatingActionButton extends ImageButton {
                 circleInsetVertical + iconHeightOffset
         );
 
+        setLayerType(View.LAYER_TYPE_HARDWARE, null);
         setBackgroundCompat(layerDrawable);
     }
 
@@ -391,29 +391,23 @@ public class FloatingActionButton extends ImageButton {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private Drawable createFillDrawable() {
         StateListDrawable drawable = new StateListDrawable();
         drawable.addState(new int[]{-android.R.attr.state_enabled}, createCircleDrawable(mColorDisabled));
         drawable.addState(new int[]{android.R.attr.state_pressed}, createCircleDrawable(mColorPressed));
         drawable.addState(new int[]{}, createCircleDrawable(mColorNormal));
 
-        if (Util.hasLollipop()) {
-            RippleDrawable ripple = new RippleDrawable(new ColorStateList(new int[][]{{}},
-                    new int[]{mColorRipple}), drawable, null);
-            setOutlineProvider(new ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, Outline outline) {
-                    outline.setOval(0, 0, view.getWidth(), view.getHeight());
-                }
-            });
-            setClipToOutline(true);
-            mBackgroundDrawable = ripple;
-            return ripple;
-        }
-
-        mBackgroundDrawable = drawable;
-        return drawable;
+        RippleDrawable ripple = new RippleDrawable(new ColorStateList(new int[][]{{}},
+                new int[]{mColorRipple}), drawable, null);
+        setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                outline.setOval(0, 0, view.getWidth(), view.getHeight());
+            }
+        });
+        setClipToOutline(true);
+        mBackgroundDrawable = ripple;
+        return ripple;
     }
 
     private Drawable createCircleDrawable(int color) {
@@ -422,14 +416,8 @@ public class FloatingActionButton extends ImageButton {
         return shapeDrawable;
     }
 
-    @SuppressWarnings("deprecation")
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void setBackgroundCompat(Drawable drawable) {
-        if (Util.hasJellyBean()) {
-            setBackground(drawable);
-        } else {
-            setBackgroundDrawable(drawable);
-        }
+        setBackground(drawable);
     }
 
     private void saveButtonOriginalPosition() {
@@ -474,10 +462,10 @@ public class FloatingActionButton extends ImageButton {
         int circleInsetHorizontal = hasShadow() ? getShadowX() : 0;
         int circleInsetVertical = hasShadow() ? getShadowY() : 0;
         mProgressCircleBounds = new RectF(
-                circleInsetHorizontal + mProgressWidth / 2,
-                circleInsetVertical + mProgressWidth / 2,
-                calculateMeasuredWidth() - circleInsetHorizontal - mProgressWidth / 2,
-                calculateMeasuredHeight() - circleInsetVertical - mProgressWidth / 2
+                circleInsetHorizontal + (float) mProgressWidth / 2,
+                circleInsetVertical + (float) mProgressWidth / 2,
+                calculateMeasuredWidth() - circleInsetHorizontal - (float) mProgressWidth / 2,
+                calculateMeasuredHeight() - circleInsetVertical - (float) mProgressWidth / 2
         );
     }
 
@@ -513,12 +501,11 @@ public class FloatingActionButton extends ImageButton {
         mColorRipple = colorRipple;
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     void onActionDown() {
         if (mBackgroundDrawable instanceof StateListDrawable) {
             StateListDrawable drawable = (StateListDrawable) mBackgroundDrawable;
             drawable.setState(new int[]{android.R.attr.state_enabled, android.R.attr.state_pressed});
-        } else if (Util.hasLollipop()) {
+        } else {
             RippleDrawable ripple = (RippleDrawable) mBackgroundDrawable;
             ripple.setState(new int[]{android.R.attr.state_enabled, android.R.attr.state_pressed});
             ripple.setHotspot(calculateCenterX(), calculateCenterY());
@@ -526,12 +513,11 @@ public class FloatingActionButton extends ImageButton {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     void onActionUp() {
         if (mBackgroundDrawable instanceof StateListDrawable) {
             StateListDrawable drawable = (StateListDrawable) mBackgroundDrawable;
             drawable.setState(new int[]{android.R.attr.state_enabled});
-        } else if (Util.hasLollipop()) {
+        } {
             RippleDrawable ripple = (RippleDrawable) mBackgroundDrawable;
             ripple.setState(new int[]{android.R.attr.state_enabled});
             ripple.setHotspot(calculateCenterX(), calculateCenterY());
@@ -548,16 +534,12 @@ public class FloatingActionButton extends ImageButton {
             int action = event.getAction();
             switch (action) {
                 case MotionEvent.ACTION_UP:
-                    if (label != null) {
-                        label.onActionUp();
-                    }
+                    label.onActionUp();
                     onActionUp();
                     break;
 
                 case MotionEvent.ACTION_CANCEL:
-                    if (label != null) {
-                        label.onActionUp();
-                    }
+                    label.onActionUp();
                     onActionUp();
                     break;
             }
@@ -664,8 +646,8 @@ public class FloatingActionButton extends ImageButton {
 
     private class Shadow extends Drawable {
 
-        private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private Paint mErase = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint mErase = new Paint(Paint.ANTI_ALIAS_FLAG);
         private float mRadius;
 
         private Shadow() {
@@ -683,7 +665,7 @@ public class FloatingActionButton extends ImageButton {
                 mPaint.setShadowLayer(mShadowRadius, mShadowXOffset, mShadowYOffset, mShadowColor);
             }
 
-            mRadius = getCircleSize() / 2;
+            mRadius = (float) getCircleSize() / 2;
 
             if (mProgressBarEnabled && mShowProgressBackground) {
                 mRadius += mProgressWidth;
@@ -708,7 +690,7 @@ public class FloatingActionButton extends ImageButton {
 
         @Override
         public int getOpacity() {
-            return 0;
+            return PixelFormat.UNKNOWN;
         }
     }
 
@@ -1108,7 +1090,7 @@ public class FloatingActionButton extends ImageButton {
 
     @Override
     public void setElevation(float elevation) {
-        if (Util.hasLollipop() && elevation > 0) {
+        if (elevation > 0) {
             super.setElevation(elevation);
             if (!isInEditMode()) {
                 mUsingElevation = true;
@@ -1124,26 +1106,20 @@ public class FloatingActionButton extends ImageButton {
      * <p><b>API 21+</b>: Sets the native elevation of this view, in pixels. Updates margins to
      * make the view hold its position in layout across different platform versions.</p>
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void setElevationCompat(float elevation) {
         mShadowColor = 0x26000000;
         mShadowRadius = Math.round(elevation / 2);
         mShadowXOffset = 0;
         mShadowYOffset = Math.round(mFabSize == SIZE_NORMAL ? elevation : elevation / 2);
 
-        if (Util.hasLollipop()) {
-            super.setElevation(elevation);
-            mUsingElevationCompat = true;
-            mShowShadow = false;
-            updateBackground();
+        super.setElevation(elevation);
+        mUsingElevationCompat = true;
+        mShowShadow = false;
+        updateBackground();
 
-            ViewGroup.LayoutParams layoutParams = getLayoutParams();
-            if (layoutParams != null) {
-                setLayoutParams(layoutParams);
-            }
-        } else {
-            mShowShadow = true;
-            updateBackground();
+        ViewGroup.LayoutParams layoutParams = getLayoutParams();
+        if (layoutParams != null) {
+            setLayoutParams(layoutParams);
         }
     }
 

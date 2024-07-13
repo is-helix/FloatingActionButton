@@ -7,9 +7,6 @@ import android.animation.ObjectAnimator;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +14,11 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -28,20 +30,14 @@ import java.util.List;
 public class MenusFragment extends Fragment {
 
     private FloatingActionMenu menuRed;
-    private FloatingActionMenu menuYellow;
     private FloatingActionMenu menuGreen;
-    private FloatingActionMenu menuBlue;
-    private FloatingActionMenu menuDown;
-    private FloatingActionMenu menuLabelsRight;
 
-    private FloatingActionButton fab1;
     private FloatingActionButton fab2;
-    private FloatingActionButton fab3;
 
     private FloatingActionButton fabEdit;
 
-    private List<FloatingActionMenu> menus = new ArrayList<>();
-    private Handler mUiHandler = new Handler();
+    private final List<FloatingActionMenu> menus = new ArrayList<>();
+    private final Handler mUiHandler = new Handler();
 
     @Nullable
     @Override
@@ -50,24 +46,24 @@ public class MenusFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        menuRed = (FloatingActionMenu) view.findViewById(R.id.menu_red);
-        menuYellow = (FloatingActionMenu) view.findViewById(R.id.menu_yellow);
-        menuGreen = (FloatingActionMenu) view.findViewById(R.id.menu_green);
-        menuBlue = (FloatingActionMenu) view.findViewById(R.id.menu_blue);
-        menuDown = (FloatingActionMenu) view.findViewById(R.id.menu_down);
-        menuLabelsRight = (FloatingActionMenu) view.findViewById(R.id.menu_labels_right);
+        menuRed = view.findViewById(R.id.menu_red);
+        FloatingActionMenu menuYellow = view.findViewById(R.id.menu_yellow);
+        menuGreen = view.findViewById(R.id.menu_green);
+        FloatingActionMenu menuBlue = view.findViewById(R.id.menu_blue);
+        FloatingActionMenu menuDown = view.findViewById(R.id.menu_down);
+        FloatingActionMenu menuLabelsRight = view.findViewById(R.id.menu_labels_right);
 
-        //set menu label colors programatically
+        //set menu label colors programmatically
         menuRed.setMenuLabelColorNormal(Color.GREEN);
         menuRed.setMenuButtonColorPressed(Color.GRAY);
-        menuRed.setMenuLabelTextColor(Color.YELLOW);
+        menuRed.setMenuLabelTextColor(Color.BLACK);
 
-        fab1 = (FloatingActionButton) view.findViewById(R.id.fab1);
-        fab2 = (FloatingActionButton) view.findViewById(R.id.fab2);
-        fab3 = (FloatingActionButton) view.findViewById(R.id.fab3);
+        FloatingActionButton fab1 = view.findViewById(R.id.fab1);
+        fab2 = view.findViewById(R.id.fab2);
+        FloatingActionButton fab3 = view.findViewById(R.id.fab3);
 
         final FloatingActionButton programFab1 = new FloatingActionButton(getActivity());
         programFab1.setButtonSize(FloatingActionButton.SIZE_MINI);
@@ -77,10 +73,10 @@ public class MenusFragment extends Fragment {
         programFab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                programFab1.setLabelColors(ContextCompat.getColor(getActivity(), R.color.grey),
-                        ContextCompat.getColor(getActivity(), R.color.light_grey),
-                        ContextCompat.getColor(getActivity(), R.color.white_transparent));
-                programFab1.setLabelTextColor(ContextCompat.getColor(getActivity(), R.color.black));
+                programFab1.setLabelColors(ContextCompat.getColor(requireActivity(), R.color.grey),
+                        ContextCompat.getColor(requireActivity(), R.color.light_grey),
+                        ContextCompat.getColor(requireActivity(), R.color.white_transparent));
+                programFab1.setLabelTextColor(ContextCompat.getColor(requireActivity(), R.color.black));
             }
         });
 
@@ -101,14 +97,9 @@ public class MenusFragment extends Fragment {
         menuBlue.hideMenuButton(false);
         menuLabelsRight.hideMenuButton(false);
 
-        fabEdit = (FloatingActionButton) view.findViewById(R.id.fab_edit);
+        fabEdit = view.findViewById(R.id.fab_edit);
         fabEdit.setShowAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.scale_up));
         fabEdit.setHideAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.scale_down));
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
         menus.add(menuDown);
         menus.add(menuRed);
@@ -166,6 +157,7 @@ public class MenusFragment extends Fragment {
         createCustomAnimation();
     }
 
+
     private void createCustomAnimation() {
         AnimatorSet set = new AnimatorSet();
 
@@ -196,7 +188,7 @@ public class MenusFragment extends Fragment {
         menuGreen.setIconToggleAnimatorSet(set);
     }
 
-    private View.OnClickListener clickListener = new View.OnClickListener() {
+    private final View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {

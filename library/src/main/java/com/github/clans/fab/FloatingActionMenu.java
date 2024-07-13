@@ -14,7 +14,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,19 +40,19 @@ public class FloatingActionMenu extends ViewGroup {
     private static final int LABELS_POSITION_LEFT = 0;
     private static final int LABELS_POSITION_RIGHT = 1;
 
-    private AnimatorSet mOpenAnimatorSet = new AnimatorSet();
-    private AnimatorSet mCloseAnimatorSet = new AnimatorSet();
+    private final AnimatorSet mOpenAnimatorSet = new AnimatorSet();
+    private final AnimatorSet mCloseAnimatorSet = new AnimatorSet();
     private AnimatorSet mIconToggleSet;
 
     private int mButtonSpacing = Util.dpToPx(getContext(), 0f);
     private FloatingActionButton mMenuButton;
     private int mMaxButtonWidth;
     private int mLabelsMargin = Util.dpToPx(getContext(), 0f);
-    private int mLabelsVerticalOffset = Util.dpToPx(getContext(), 0f);
+    private final int mLabelsVerticalOffset = Util.dpToPx(getContext(), 0f);
     private int mButtonsCount;
     private boolean mMenuOpened;
     private boolean mIsMenuOpening;
-    private Handler mUiHandler = new Handler();
+    private final Handler mUiHandler = new Handler();
     private int mLabelsShowAnimation;
     private int mLabelsHideAnimation;
     private int mLabelsPaddingTop = Util.dpToPx(getContext(), 4f);
@@ -215,22 +214,16 @@ public class FloatingActionMenu extends ViewGroup {
 
         mShowBackgroundAnimator = ValueAnimator.ofInt(0, maxAlpha);
         mShowBackgroundAnimator.setDuration(ANIMATION_DURATION);
-        mShowBackgroundAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                Integer alpha = (Integer) animation.getAnimatedValue();
-                setBackgroundColor(Color.argb(alpha, red, green, blue));
-            }
+        mShowBackgroundAnimator.addUpdateListener(animation -> {
+            Integer alpha = (Integer) animation.getAnimatedValue();
+            setBackgroundColor(Color.argb(alpha, red, green, blue));
         });
 
         mHideBackgroundAnimator = ValueAnimator.ofInt(maxAlpha, 0);
         mHideBackgroundAnimator.setDuration(ANIMATION_DURATION);
-        mHideBackgroundAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                Integer alpha = (Integer) animation.getAnimatedValue();
-                setBackgroundColor(Color.argb(alpha, red, green, blue));
-            }
+        mHideBackgroundAnimator.addUpdateListener(animation -> {
+            Integer alpha = (Integer) animation.getAnimatedValue();
+            setBackgroundColor(Color.argb(alpha, red, green, blue));
         });
     }
 
@@ -306,7 +299,7 @@ public class FloatingActionMenu extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = 0;
+        int width;
         int height = 0;
         mMaxButtonWidth = 0;
         int maxLabelWidth = 0;
@@ -463,12 +456,7 @@ public class FloatingActionMenu extends ViewGroup {
             addLabel(fab);
 
             if (fab == mMenuButton) {
-                mMenuButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        toggle(mIsAnimated);
-                    }
-                });
+                mMenuButton.setOnClickListener(v -> toggle(mIsAnimated));
             }
         }
     }
@@ -646,35 +634,29 @@ public class FloatingActionMenu extends ViewGroup {
                     counter++;
 
                     final FloatingActionButton fab = (FloatingActionButton) child;
-                    mUiHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (isOpened()) return;
+                    mUiHandler.postDelayed(() -> {
+                        if (isOpened()) return;
 
-                            if (fab != mMenuButton) {
-                                fab.show(animate);
-                            }
+                        if (fab != mMenuButton) {
+                            fab.show(animate);
+                        }
 
-                            Label label = (Label) fab.getTag(R.id.fab_label);
-                            if (label != null && label.isHandleVisibilityChanges()) {
-                                label.show(animate);
-                            }
+                        Label label = (Label) fab.getTag(R.id.fab_label);
+                        if (label != null && label.isHandleVisibilityChanges()) {
+                            label.show(animate);
                         }
                     }, delay);
                     delay += mAnimationDelayPerItem;
                 }
             }
 
-            mUiHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mMenuOpened = true;
+            mUiHandler.postDelayed(() -> {
+                mMenuOpened = true;
 
-                    if (mToggleListener != null) {
-                        mToggleListener.onMenuToggle(true);
-                    }
+                if (mToggleListener != null) {
+                    mToggleListener.onMenuToggle(true);
                 }
-            }, ++counter * mAnimationDelayPerItem);
+            }, (long) ++counter * mAnimationDelayPerItem);
         }
     }
 
@@ -702,35 +684,29 @@ public class FloatingActionMenu extends ViewGroup {
                     counter++;
 
                     final FloatingActionButton fab = (FloatingActionButton) child;
-                    mUiHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!isOpened()) return;
+                    mUiHandler.postDelayed(() -> {
+                        if (!isOpened()) return;
 
-                            if (fab != mMenuButton) {
-                                fab.hide(animate);
-                            }
+                        if (fab != mMenuButton) {
+                            fab.hide(animate);
+                        }
 
-                            Label label = (Label) fab.getTag(R.id.fab_label);
-                            if (label != null && label.isHandleVisibilityChanges()) {
-                                label.hide(animate);
-                            }
+                        Label label = (Label) fab.getTag(R.id.fab_label);
+                        if (label != null && label.isHandleVisibilityChanges()) {
+                            label.hide(animate);
                         }
                     }, delay);
                     delay += mAnimationDelayPerItem;
                 }
             }
 
-            mUiHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mMenuOpened = false;
+            mUiHandler.postDelayed(() -> {
+                mMenuOpened = false;
 
-                    if (mToggleListener != null) {
-                        mToggleListener.onMenuToggle(false);
-                    }
+                if (mToggleListener != null) {
+                    mToggleListener.onMenuToggle(false);
                 }
-            }, ++counter * mAnimationDelayPerItem);
+            }, (long) ++counter * mAnimationDelayPerItem);
         }
     }
 
@@ -841,16 +817,13 @@ public class FloatingActionMenu extends ViewGroup {
             mIsMenuButtonAnimationRunning = true;
             if (isOpened()) {
                 close(animate);
-                mUiHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (animate) {
-                            startAnimation(mMenuButtonHideAnimation);
-                        }
-                        setVisibility(INVISIBLE);
-                        mIsMenuButtonAnimationRunning = false;
+                mUiHandler.postDelayed(() -> {
+                    if (animate) {
+                        startAnimation(mMenuButtonHideAnimation);
                     }
-                }, mAnimationDelayPerItem * mButtonsCount);
+                    setVisibility(INVISIBLE);
+                    mIsMenuButtonAnimationRunning = false;
+                }, (long) mAnimationDelayPerItem * mButtonsCount);
             } else {
                 if (animate) {
                     startAnimation(mMenuButtonHideAnimation);
@@ -892,12 +865,7 @@ public class FloatingActionMenu extends ViewGroup {
             mIsMenuButtonAnimationRunning = true;
             if (isOpened()) {
                 close(animate);
-                mUiHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        hideMenuButtonWithImage(animate);
-                    }
-                }, mAnimationDelayPerItem * mButtonsCount);
+                mUiHandler.postDelayed(() -> hideMenuButtonWithImage(animate), (long) mAnimationDelayPerItem * mButtonsCount);
             } else {
                 hideMenuButtonWithImage(animate);
             }

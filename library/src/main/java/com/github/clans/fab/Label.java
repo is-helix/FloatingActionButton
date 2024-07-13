@@ -1,6 +1,5 @@
 package com.github.clans.fab;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;
@@ -16,14 +15,15 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.graphics.drawable.shapes.RoundRectShape;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.animation.Animation;
 import android.widget.TextView;
+
+import org.jetbrains.annotations.NotNull;
 
 public class Label extends TextView {
 
@@ -113,24 +113,19 @@ public class Label extends TextView {
             });
         }
 
+        setLayerType(View.LAYER_TYPE_HARDWARE, null);
         setBackgroundCompat(layerDrawable);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private Drawable createFillDrawable() {
         StateListDrawable drawable = new StateListDrawable();
         drawable.addState(new int[]{android.R.attr.state_pressed}, createRectDrawable(mColorPressed));
         drawable.addState(new int[]{}, createRectDrawable(mColorNormal));
 
-        if (Util.hasLollipop()) {
-            RippleDrawable ripple = new RippleDrawable(new ColorStateList(new int[][]{{}},
-                    new int[]{mColorRipple}), drawable, null);
-            mBackgroundDrawable = ripple;
-            return ripple;
-        }
-
-        mBackgroundDrawable = drawable;
-        return drawable;
+        RippleDrawable ripple = new RippleDrawable(new ColorStateList(new int[][]{{}},
+                new int[]{mColorRipple}), drawable, null);
+        mBackgroundDrawable = ripple;
+        return ripple;
     }
 
     private Drawable createRectDrawable(int color) {
@@ -160,14 +155,8 @@ public class Label extends TextView {
         mShowShadow = fab.hasShadow();
     }
 
-    @SuppressWarnings("deprecation")
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setBackgroundCompat(Drawable drawable) {
-        if (Util.hasJellyBean()) {
-            setBackground(drawable);
-        } else {
-            setBackgroundDrawable(drawable);
-        }
+        setBackground(drawable);
     }
 
     private void playShowAnimation() {
@@ -184,7 +173,6 @@ public class Label extends TextView {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     void onActionDown() {
         if (mUsingStyle) {
             mBackgroundDrawable = getBackground();
@@ -193,16 +181,15 @@ public class Label extends TextView {
         if (mBackgroundDrawable instanceof StateListDrawable) {
             StateListDrawable drawable = (StateListDrawable) mBackgroundDrawable;
             drawable.setState(new int[]{android.R.attr.state_pressed});
-        } else if (Util.hasLollipop() && mBackgroundDrawable instanceof RippleDrawable) {
+        } else if (mBackgroundDrawable instanceof RippleDrawable) {
             RippleDrawable ripple = (RippleDrawable) mBackgroundDrawable;
             ripple.setState(new int[]{android.R.attr.state_enabled, android.R.attr.state_pressed});
-            ripple.setHotspot(getMeasuredWidth() / 2, getMeasuredHeight() / 2);
+            ripple.setHotspot((float) getMeasuredWidth() / 2, (float) getMeasuredHeight() / 2);
             ripple.setVisible(true, true);
         }
 //        setPressed(true);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     void onActionUp() {
         if (mUsingStyle) {
             mBackgroundDrawable = getBackground();
@@ -211,10 +198,10 @@ public class Label extends TextView {
         if (mBackgroundDrawable instanceof StateListDrawable) {
             StateListDrawable drawable = (StateListDrawable) mBackgroundDrawable;
             drawable.setState(new int[]{});
-        } else if (Util.hasLollipop() && mBackgroundDrawable instanceof RippleDrawable) {
+        } else if (mBackgroundDrawable instanceof RippleDrawable) {
             RippleDrawable ripple = (RippleDrawable) mBackgroundDrawable;
             ripple.setState(new int[]{});
-            ripple.setHotspot(getMeasuredWidth() / 2, getMeasuredHeight() / 2);
+            ripple.setHotspot((float) getMeasuredWidth() / 2, (float) getMeasuredHeight() / 2);
             ripple.setVisible(true, true);
         }
 //        setPressed(false);
@@ -299,7 +286,7 @@ public class Label extends TextView {
     GestureDetector mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
 
         @Override
-        public boolean onDown(MotionEvent e) {
+        public boolean onDown(@NotNull MotionEvent e) {
             onActionDown();
             if (mFab != null) {
                 mFab.onActionDown();
@@ -308,7 +295,7 @@ public class Label extends TextView {
         }
 
         @Override
-        public boolean onSingleTapUp(MotionEvent e) {
+        public boolean onSingleTapUp(@NotNull MotionEvent e) {
             onActionUp();
             if (mFab != null) {
                 mFab.onActionUp();
@@ -319,8 +306,8 @@ public class Label extends TextView {
 
     private class Shadow extends Drawable {
 
-        private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private Paint mErase = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint mErase = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         private Shadow() {
             this.init();
@@ -339,7 +326,7 @@ public class Label extends TextView {
         }
 
         @Override
-        public void draw(Canvas canvas) {
+        public void draw(@NotNull Canvas canvas) {
             RectF shadowRect = new RectF(
                     mShadowRadius + Math.abs(mShadowXOffset),
                     mShadowRadius + Math.abs(mShadowYOffset),
