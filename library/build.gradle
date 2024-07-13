@@ -20,6 +20,12 @@ android {
         }
     }
 
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
+
     namespace 'com.github.clans.fab'
 }
 
@@ -29,17 +35,24 @@ dependencies {
 }
 
 group=GROUP
+version=VERSION_NAME
 
-afterEvaluate {
-    publishing {
-        publications {
-            // Creates a Maven publication called "release".
-            release(MavenPublication) {
-                from components.findByName("release")
-                groupId = 'com.github.jitpack'
-                artifactId = 'android-example'
-                version = '1.0'
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = GROUP
+            artifactId = POM_ARTIFACT_ID
+            version = VERSION_NAME
+
+            afterEvaluate {
+                from components.release
             }
+        }
+    }
+    repositories {
+        maven {
+            name = 'myrepo'
+            url = "${project.buildDir}/repo"
         }
     }
 }
