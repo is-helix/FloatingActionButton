@@ -25,6 +25,8 @@ import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -254,7 +256,9 @@ public class FloatingActionMenu extends ViewGroup {
         } else if (mMenuLabelText != null) {
             description = mMenuLabelText + ", " + state;
         }
-        mMenuButton.setContentDescription(description);
+        if (mMenuButton != null) {
+            mMenuButton.setContentDescription(description);
+        }
     }
 
     private void createMenuButton() {
@@ -620,6 +624,12 @@ public class FloatingActionMenu extends ViewGroup {
         }
 
         return super.onTouchEvent(event);
+    }
+
+    @Override
+    public void setContentDescription(@NotNull CharSequence contentDescription) {
+        super.setContentDescription(contentDescription);
+        updateContentDescription();
     }
 
     /* ===== API methods ===== */

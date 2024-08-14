@@ -56,6 +56,9 @@ public class MenusFragment extends Fragment {
         FloatingActionMenu menuDown = view.findViewById(R.id.menu_down);
         FloatingActionMenu menuLabelsRight = view.findViewById(R.id.menu_labels_right);
 
+        //Set content description programmatically
+        menuDown.setContentDescription(getString(R.string.down_menu));
+
         //set menu label colors programmatically
         menuRed.setMenuLabelColorNormal(Color.GREEN);
         menuRed.setMenuButtonColorPressed(Color.GRAY);
