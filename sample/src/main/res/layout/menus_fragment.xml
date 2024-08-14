@@ -47,7 +47,8 @@
         fab:menu_shadowColor="#444"
         fab:menu_colorNormal="#FFB805"
         fab:menu_colorPressed="#F2AB00"
-        fab:menu_colorRipple="#D99200">
+        fab:menu_colorRipple="#D99200"
+        android:contentDescription="@string/yellow_menu">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab12"
@@ -91,7 +92,8 @@
         fab:menu_colorPressed="#2E7D32"
         fab:menu_colorRipple="#1B5E20"
         fab:menu_labels_maxLines="2"
-        fab:menu_labels_ellipsize="end">
+        fab:menu_labels_ellipsize="end"
+        android:contentDescription="@string/green_menu">
 
         <com.github.clans.fab.FloatingActionButton
             android:layout_width="wrap_content"
@@ -129,7 +131,8 @@
         fab:menu_fab_size="mini"
         fab:menu_colorNormal="#1565C0"
         fab:menu_colorPressed="#2272CD"
-        fab:menu_colorRipple="#62B2FF">
+        fab:menu_colorRipple="#62B2FF"
+        android:contentDescription="@string/blue_menu">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab14"
@@ -168,7 +171,8 @@
         fab:fab_shadowColor="#000"
         fab:fab_elevationCompat="6dp"
         android:visibility="invisible"
-        tools:visibility="visible"/>
+        tools:visibility="visible"
+        android:contentDescription="@string/action_edit"/>
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/menu_down"
@@ -184,28 +188,29 @@
         fab:menu_labels_ellipsize="end"
         fab:menu_labels_singleLine="true"
         fab:menu_fab_size="mini"
-        fab:menu_openDirection="down">
+        fab:menu_openDirection="down"
+        android:contentDescription="@string/down_menu">
 
         <com.github.clans.fab.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_edit"
             fab:fab_size="mini"
-            fab:fab_label="Menu item 1" />
+            fab:fab_label="@string/menu_item_1"/>
 
         <com.github.clans.fab.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_edit"
             fab:fab_size="mini"
-            fab:fab_label="Menu item 2" />
+            fab:fab_label="@string/menu_item_2"/>
 
         <com.github.clans.fab.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_edit"
             fab:fab_size="mini"
-            fab:fab_label="@string/lorem_ipsum" />
+            fab:fab_label="@string/lorem_ipsum"/>
 
     </com.github.clans.fab.FloatingActionMenu>
 
@@ -221,7 +226,8 @@
         fab:menu_labels_ellipsize="end"
         fab:menu_labels_singleLine="true"
         fab:menu_backgroundColor="#ccffffff"
-        fab:menu_fab_label="Menu label">
+        fab:menu_fab_label="Menu label"
+        android:contentDescription="@string/red_menu">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab1"
@@ -260,7 +266,8 @@
         fab:menu_labels_ellipsize="end"
         fab:menu_labels_singleLine="true"
         fab:menu_backgroundColor="#ccffffff"
-        fab:menu_labels_position="right">
+        fab:menu_labels_position="right"
+        fab:menu_fab_label="Menu label">
 
         <com.github.clans.fab.FloatingActionButton
             android:layout_width="wrap_content"
@@ -281,7 +288,8 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_edit"
             fab:fab_size="mini"
-            fab:fab_label="@string/lorem_ipsum" />
+            fab:fab_label="@string/lorem_ipsum"
+            android:contentDescription="@string/menu_item_3"/>
 
     </com.github.clans.fab.FloatingActionMenu>
 

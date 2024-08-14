@@ -1,6 +1,5 @@
 package com.github.clans.fab;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
@@ -22,7 +21,6 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.graphics.drawable.shapes.Shape;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.SystemClock;
@@ -36,6 +34,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import org.jetbrains.annotations.NotNull;
 
 public class FloatingActionButton extends ImageButton {
 
@@ -162,6 +162,10 @@ public class FloatingActionButton extends ImageButton {
         }
 
 //        updateBackground();
+        if (getContentDescription() == null) {
+            // Set a default label if none is provided
+            setContentDescription(getContext().getString(R.string.floating_action_default_content_description)); // Or any other suitable default
+        }
         setClickable(true);
     }
 
@@ -561,7 +565,7 @@ public class FloatingActionButton extends ImageButton {
         }
 
         @Override
-        public boolean onSingleTapUp(MotionEvent e) {
+        public boolean onSingleTapUp(@NotNull MotionEvent e) {
             Label label = (Label) getTag(R.id.fab_label);
             if (label != null) {
                 label.onActionUp();
@@ -673,7 +677,7 @@ public class FloatingActionButton extends ImageButton {
         }
 
         @Override
-        public void draw(Canvas canvas) {
+        public void draw(@NotNull Canvas canvas) {
             canvas.drawCircle(calculateCenterX(), calculateCenterY(), mRadius, mPaint);
             canvas.drawCircle(calculateCenterX(), calculateCenterY(), mRadius, mErase);
         }
