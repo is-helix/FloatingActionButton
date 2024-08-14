@@ -6,4 +6,17 @@
     <string name="lorem_ipsum_large">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed ultricies risus. Integer nisi orci, lacinia sit amet mi in, mollis scelerisque purus. Nunc risus ligula, maximus eu orci a, facilisis dictum velit. Proin nec laoreet magna. Nulla ut sagittis lorem. Morbi id enim fermentum, semper diam et, tempus leo. Aliquam vel congue orci. Suspendisse potenti. Curabitur finibus diam augue, vel bibendum sapien ultrices non.</string>
     <string name="navigation_drawer_open">Navigation open</string>
     <string name="navigation_drawer_close">Navigation close</string>
+
+<!--    Content descriptions -->
+    <string name="green_menu">Green Menu</string>
+    <string name="red_menu">Red Menu</string>
+    <string name="yellow_menu">Yellow Menu</string>
+    <string name="blue_menu">Blue Menu</string>
+    <string name="action_edit">Edit</string>
+    <string name="down_menu">Down Menu</string>
+    <string name="menu_item_1">Menu item 1</string>
+    <string name="menu_item_2">Menu item 2</string>
+    <string name="menu_item_long_label">Menu item long label</string>
+    <string name="right_menu">Right menu</string>
+    <string name="menu_item_3">Menu item 3</string>
 </resources>

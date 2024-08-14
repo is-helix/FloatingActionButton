@@ -17,6 +17,7 @@ import android.view.ContextThemeWrapper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityEvent;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.AnticipateInterpolator;
@@ -238,9 +239,27 @@ public class FloatingActionMenu extends ViewGroup {
         mLabelsPaddingLeft = padding;
     }
 
+    /**
+     * Sets the content description of the {@link #FloatingActionMenu} based on its state.
+     */
+    private void updateContentDescription() {
+        String state = "closed";
+        if (isOpened()) {
+            state = "opened";
+        }
+        String description = getContext().getString(R.string.floating_action_menu_default_content_description) + ", " + state;
+        //Content description takes priority over label text
+        if (getContentDescription() != null) {
+            description = getContentDescription() + ", " + state;
+        } else if (mMenuLabelText != null) {
+            description = mMenuLabelText + ", " + state;
+        }
+        mMenuButton.setContentDescription(description);
+    }
+
     private void createMenuButton() {
         mMenuButton = new FloatingActionButton(getContext());
-
+        updateContentDescription();
         mMenuButton.mShowShadow = mMenuShowShadow;
         if (mMenuShowShadow) {
             mMenuButton.mShadowRadius = Util.dpToPx(getContext(), mMenuShadowRadius);
@@ -442,6 +461,7 @@ public class FloatingActionMenu extends ViewGroup {
         bringChildToFront(mImageToggle);
         mButtonsCount = getChildCount();
         createLabels();
+        updateContentDescription();
     }
 
     private void createLabels() {
@@ -512,10 +532,16 @@ public class FloatingActionMenu extends ViewGroup {
             label.setTypeface(mCustomTypefaceFromFont);
         }
         label.setText(text);
+        label.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
         label.setOnClickListener(fab.getOnClickListener());
 
         addView(label);
         fab.setTag(R.id.fab_label, label);
+        //If a custom content description is provided, use it. Else use the label text
+        if (fab.getContentDescription() == null ||
+                fab.getContentDescription().equals(getContext().getString(R.string.floating_action_default_content_description))) {
+            fab.setContentDescription(text);
+        }
     }
 
     private void setLabelEllipsize(Label label) {
@@ -650,11 +676,17 @@ public class FloatingActionMenu extends ViewGroup {
                 }
             }
 
+            final int finalCounter = counter;
             mUiHandler.postDelayed(() -> {
                 mMenuOpened = true;
 
                 if (mToggleListener != null) {
                     mToggleListener.onMenuToggle(true);
+                }
+                updateContentDescription();
+                if (finalCounter > 0) {
+                    getChildAt(finalCounter - 1).requestFocus();
+                    getChildAt(finalCounter - 1).sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED);
                 }
             }, (long) ++counter * mAnimationDelayPerItem);
         }
@@ -699,12 +731,17 @@ public class FloatingActionMenu extends ViewGroup {
                     delay += mAnimationDelayPerItem;
                 }
             }
-
+            final int finalCounter = counter;
             mUiHandler.postDelayed(() -> {
                 mMenuOpened = false;
 
                 if (mToggleListener != null) {
                     mToggleListener.onMenuToggle(false);
+                }
+                updateContentDescription();
+                if (finalCounter > 0) {
+                    getChildAt(finalCounter - 1).requestFocus();
+                    getChildAt(finalCounter - 1).sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED);
                 }
             }, (long) ++counter * mAnimationDelayPerItem);
         }
