@@ -243,9 +243,9 @@ public class FloatingActionMenu extends ViewGroup {
      * Sets the content description of the {@link #FloatingActionMenu} based on its state.
      */
     private void updateContentDescription() {
-        String state = "closed";
+        String state = "collapsed";
         if (isOpened()) {
-            state = "opened";
+            state = "expanded";
         }
         String description = getContext().getString(R.string.floating_action_menu_default_content_description) + ", " + state;
         //Content description takes priority over label text
